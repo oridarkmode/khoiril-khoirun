@@ -2,7 +2,7 @@
 
 ## Fitur
 - Cover gate + custom nama tamu dari URL `?to=Nama+Tamu`
-- Background berbeda: cover/home/closing 
+- Background berbeda: cover/home/closing  
 - Musik latar + mute (aktif setelah klik “Buka Undangan”)
 - Countdown
 - Acara hanya 2: (Akad & Resepsi), (Ngunduh Mantu)
