@@ -535,6 +535,7 @@ function fetchWishesJSONP(limit=100){
     };
     const script = document.createElement("script");
     script.src = `${url}?type=wishes&limit=${encodeURIComponent(limit)}&callback=${encodeURIComponent(cbName)}`;
+    script.referrerPolicy = "no-referrer"; // minimize referrer
     script.onerror = ()=>{ delete window[cbName]; script.remove(); resolve(null); };
     document.body.appendChild(script);
   });
@@ -660,6 +661,7 @@ function registerSW(){
     alert("Gagal memuat undangan. Pastikan struktur folder & path file benar.");
   }
 })();
+
 
 
 
