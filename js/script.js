@@ -1,3 +1,5 @@
+/* Oridarkmode Custom Branding License (OCBL-1.0)
+   © 2026 Oridarkmode Studio — Penggunaan tunduk pada LICENSE */
 /* =========================================================
    Glassmorphism Invitation - FINAL (Stabil + Featured Video)
 ========================================================= */
@@ -661,6 +663,7 @@ function registerSW(){
     alert("Gagal memuat undangan. Pastikan struktur folder & path file benar.");
   }
 })();
+
 
 
 
