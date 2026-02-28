@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#C7B8FF" />
+  <title>Undangan Pernikahan</title>
+
+  <!-- Security: Content Security Policy (meta-based for GitHub Pages) -->
+  <!-- Catatan: kita perlu mengizinkan script.google.com untuk JSONP & google.com untuk <iframe> Maps -->
+  <meta http-equiv="Content-Security-Policy"
+        content="
+          default-src 'self';
+          script-src 'self' https://script.google.com;
+          style-src  'self' 'unsafe-inline' https://fonts.googleapis.com;
+          img-src    'self' data: https:;
+          font-src   'self' https://fonts.gstatic.com;
+          connect-src 'self' https://script.google.com;
+          frame-src  https://www.google.com https://maps.google.com https://www.google.co.id;
+          media-src  'self';
+          object-src 'none';
+          base-uri   'self';
+          form-action 'self' https://script.google.com;
+        ">
+
+  <!-- (Opsional) iOS: jangan auto-detect nomor telp -->
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- SEO/Share -->
+  <meta name="description" content="Undangan pernikahan digital bergaya glassmorphism yang elegan." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Undangan Pernikahan" />
+  <meta property="og:description" content="Kami mengundang Anda untuk hadir di hari bahagia kami." />
+  <meta property="og:url" content="https://oridarkmode.github.io/Uleman/" />
+  <meta property="og:image" content="https://oridarkmode.github.io/Uleman/assets/img/cover.jpg" />
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- PWA (path relatif agar cocok di subfolder) -->
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./assets/icons/icon-192.png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="./assets/icons/icon-192.png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- CSS (versi untuk cache-busting) -->
+  <link rel="stylesheet" href="./css/style.css?v=20260228" />
+</head>
+
+<body>
+  <noscript>
+    <div style="padding:12px; text-align:center; background:#222; color:#fff; font-family:system-ui">
+      Situs ini memerlukan JavaScript agar berfungsi dengan baik.
+    </div>
+  </noscript>
+
+  <!-- Ambient blobs -->
+  <div class="ambient" aria-hidden="true">
+    <span class="blob blob--1"></span>
+    <span class="blob blob--2"></span>
+    <span class="blob blob--3"></span>
+    <span class="grain"></span>
+  </div>
+
+  <!-- Audio -->
+  <audio id="bgm" preload="auto" loop></audio>
+
+  <!-- 1) COVER / GATE -->
+  <section id="coverGate" class="gate" role="dialog" aria-modal="true" aria-label="Cover Undangan">
+    <div class="gate__bg" id="coverBg" aria-hidden="true"></div>
+
+    <div class="gate__card glass">
+      <div class="gate__top">
+        <p class="kicker" id="coverTitleTop">The Wedding Of</p>
+        <h1 class="display" id="coverTitle">K &amp; K</h1>
+        <p class="sub" id="coverDateText">Selasa, 24 Maret 2026</p>
+      </div>
+
+      <div class="gate__mid">
+        <p class="muted">Kepada Yth.</p>
+        <h2 class="guest" id="guestName">Tamu Undangan</h2>
+        <p class="tiny muted">Mohon maaf jika ada kesalahan penulisan nama &amp; gelar.</p>
+      </div>
+
+      <div class="gate__actions">
+        <button id="btnOpen" class="btn btn--primary" type="button">
+          <span class="btn__glow" aria-hidden="true"></span>
+          Buka Undangan
+        </button>
+        <button id="btnMuteGate" class="btn btn--ghost" type="button" aria-pressed="false">
+          Musik: Off
+        </button>
+      </div>
+
+      <p class="tiny muted" id="coverGreeting"></p>
+    </div>
+  </section>
+
+  <!-- NAV -->
+  <header class="navWrap">
+    <div class="navInner glass">
+      <a href="#home" class="brand" aria-label="Ke Beranda">
+        <span class="brand__dot" aria-hidden="true"></span>
+        <span id="brandText">Undangan</span>
+      </a>
+
+      <nav class="nav" aria-label="Navigasi">
+        <a href="#home">Home</a>
+        <a href="#couple">Mempelai</a>
+        <a href="#events">Acara</a>
+        <a href="#gallery">Galeri</a>
+        <a href="#story">Kisah</a>
+        <a href="#gifts">Kado</a>
+        <a href="#rsvp">RSVP</a>
+        <a href="#closing">Penutup</a>
+      </nav>
+
+      <div class="navBtns">
+        <button id="btnMute" class="iconBtn" type="button" aria-pressed="false" title="Toggle musik">♪</button>
+        <button id="btnTop" class="iconBtn" type="button" title="Ke atas">↑</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- 2) HOME -->
+    <section id="home" class="section hero" aria-labelledby="homeTitle">
+      <div class="sectionBg sectionBg--home" id="homeBg" aria-hidden="true"></div>
+
+      <div class="container">
+        <div class="heroCard glass reveal">
+          <p class="kicker" id="homeGreet">The Wedding Of</p>
+
+          <h2 class="display display--md" id="homeTitle">
+            <span id="groomNameShort">Khoiril</span>
+            <span class="amp">&amp;</span>
+            <span id="brideNameShort">Khoirun</span>
+          </h2>
+
+          <p class="sub" id="homeHeadline">
+            Kami mengundang Bapak/Ibu/Saudara/i untuk hadir di hari bahagia kami.
+          </p>
+
+          <div class="metaRow">
+            <span class="pill" id="homeDatePill">Selasa, 24 Maret 2026</span>
+            <span class="pill" id="homeLocPill">Jepara, Jawa Tengah</span>
+          </div>
+
+          <div class="countdown" aria-label="Hitung mundur" role="status" aria-live="polite">
+            <div class="cdItem"><b id="cdDays">00</b><small>Hari</small></div>
+            <div class="cdItem"><b id="cdHours">00</b><small>Jam</small></div>
+            <div class="cdItem"><b id="cdMins">00</b><small>Menit</small></div>
+            <div class="cdItem"><b id="cdSecs">00</b><small>Detik</small></div>
+          </div>
+
+          <div class="ctaRow">
+            <a class="btn btn--ghost" href="#events">Lihat Detail Acara</a>
+            <button id="btnIcs" class="btn btn--primary" type="button">
+              <span class="btn__glow" aria-hidden="true"></span>
+              Simpan ke Kalender
+            </button>
+          </div>
+
+          <p class="tiny muted">Undangan untuk: <b id="guestInline">Tamu Undangan</b></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3) MEMPELAI -->
+    <section id="couple" class="section" aria-labelledby="coupleTitle">
+      <div class="container">
+        <div class="head reveal">
+          <h3 class="title" id="coupleTitle">Mempelai</h3>
+          <p class="muted">Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan kami.</p>
+        </div>
+
+        <div class="coupleGrid">
+          <article class="coupleCard glass reveal">
+            <img id="bridePhoto" class="coupleImg" src="./assets/img/couple-bride.jpg" alt="Foto Mempelai Wanita" />
+            <h4 id="brideName" class="coupleName">Mempelai Wanita</h4>
+            <p id="brideParents" class="muted">Putri dari Bapak ... &amp; Ibu ...</p>
+            <a id="brideIg" class="link" href="#" target="_blank" rel="noopener">Instagram ↗</a>
+          </article>
+
+          <div class="coupleMid reveal" aria-hidden="true">
+            <span class="ring">∞</span>
+          </div>
+
+          <article class="coupleCard glass reveal">
+            <img id="groomPhoto" class="coupleImg" src="./assets/img/couple-groom.jpg" alt="Foto Mempelai Pria" />
+            <h4 id="groomName" class="coupleName">Mempelai Pria</h4>
+            <p id="groomParents" class="muted">Putra dari Bapak ... &amp; Ibu ...</p>
+            <a id="groomIg" class="link" href="#" target="_blank" rel="noopener">Instagram ↗</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4) ACARA -->
+    <section id="events" class="section sectionAlt" aria-labelledby="eventsTitle">
+      <div class="container">
+        <div class="head reveal">
+          <h3 class="title" id="eventsTitle">Acara</h3>
+          <p class="muted">Klik “Petunjuk Arah” untuk membuka Google Maps.</p>
+        </div>
+
+        <div id="eventCards" class="eventGrid"></div>
+      </div>
+    </section>
+
+    <!-- 5) GALERI -->
+    <section id="gallery" class="section" aria-labelledby="galleryTitle">
+      <div class="container">
+        <div class="head reveal">
+          <h3 class="title" id="galleryTitle">Galeri</h3>
+          <p class="muted">Klik Untuk Melihat</p>
+        </div>
+
+        <!-- Foto bagian atas -->
+        <div id="galleryPhotosTop" class="galleryGrid reveal"></div>
+
+        <!-- Video utama di tengah -->
+        <div id="galleryVideoFeatured" class="galleryFeatured reveal" aria-label="Video Utama"></div>
+
+        <!-- Foto bagian bawah -->
+        <div id="galleryPhotosBottom" class="galleryGrid reveal"></div>
+      </div>
+
+      <!-- Photo modal -->
+      <div id="photoModal" class="modal" aria-hidden="true" role="dialog" aria-label="Foto">
+        <button class="modal__close" id="photoClose" aria-label="Tutup">×</button>
+        <img id="photoFull" alt="Foto galeri" />
+      </div>
+
+      <!-- Video modal -->
+      <div id="videoModal" class="modal" aria-hidden="true" role="dialog" aria-label="Video">
+        <button class="modal__close" id="videoClose" aria-label="Tutup">×</button>
+        <video id="videoPlayer" controls playsinline></video>
+      </div>
+    </section>
+
+    <!-- 6) KISAH CINTA -->
+    <section id="story" class="section sectionAlt" aria-labelledby="storyTitle">
+      <div class="container">
+        <div class="head reveal">
+          <h3 class="title" id="storyTitle">Kisah Cinta</h3>
+          <p class="muted">Perjalanan singkat yang membawa kami sampai di hari ini.</p>
+        </div>
+
+        <div id="storyWrap" class="timeline"></div>
+      </div>
+    </section>
+
+    <!-- 7) KADO DIGITAL -->
+    <section id="gifts" class="section" aria-labelledby="giftsTitle">
+      <div class="container">
+        <div class="head reveal">
+          <h3 class="title" id="giftsTitle">Kado Digital</h3>
+          <p class="muted">Bagi Bapak/Ibu/Saudara/i yang ingin mengirimkan hadiah pernikahan, dapat melalui nomor rekening dan alamat di bawah ini</p>
+        </div>
+
+        <div id="giftWrap" class="giftGrid"></div>
+      </div>
+    </section>
+
+    <!-- 8) RSVP & Ucapan -->
+    <section id="rsvp" class="section sectionAlt" aria-labelledby="rsvpTitle">
+      <div class="container">
+        <div class="head reveal">
+          <h3 class="title" id="rsvpTitle">RSVP &amp; Ucapan</h3>
+          <p class="muted">Silakan isi RSVP dan tulis ucapan terbaikmu.</p>
+        </div>
+
+        <div class="rsvpGrid">
+          <!-- LEFT -->
+          <div class="glass reveal rsvpLeft">
+            <h4 class="cardTitle">RSVP</h4>
+
+            <form id="rsvpForm" novalidate>
+              <label class="field">
+                <span>Nama</span>
+                <input id="rsvpName" type="text" maxlength="60" required placeholder="Nama kamu" autocomplete="name" />
+              </label>
+
+              <label class="field">
+                <span>Kehadiran</span>
+                <select id="rsvpAttend" required>
+                  <option value="Hadir">Hadir</option>
+                  <option value="Tidak Hadir">Tidak Hadir</option>
+                  <option value="Masih Ragu">Masih Ragu</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Jumlah Tamu (Pax)</span>
+                <input id="rsvpPax" type="number" min="1" max="5" value="1" required inputmode="numeric" />
+              </label>
+
+              <label class="field">
+                <span>Pesan Singkat (opsional)</span>
+                <textarea id="rsvpMsg" rows="3" maxlength="200" placeholder="Tulis pesan..." autocomplete="off"></textarea>
+              </label>
+
+              <!-- Honeypot anti-bot (RSVP) -->
+              <input
+                type="text"
+                id="hp_trap_rsvp"
+                name="hp_trap_rsvp"
+                tabindex="-1"
+                autocomplete="off"
+                aria-hidden="true"
+                style="position:absolute; left:-9999px; width:1px; height:1px; padding:0; border:0;"
+              />
+
+              <button class="btn btn--primary w100" type="submit">
+                <span class="btn__glow" aria-hidden="true"></span>
+                Kirim RSVP
+              </button>
+
+              <p id="rsvpNote" class="tiny muted" style="margin-top:10px"></p>
+            </form>
+
+            <div class="divider"></div>
+
+            <h4 class="cardTitle">Tulis Ucapan</h4>
+            <form id="wishForm" novalidate>
+              <label class="field">
+                <span>Nama</span>
+                <input id="wishName" type="text" maxlength="60" required placeholder="Nama kamu" autocomplete="name" />
+              </label>
+              <label class="field">
+                <span>Ucapan</span>
+                <input id="wishText" type="text" maxlength="160" required placeholder="Selamat ya..." />
+              </label>
+
+              <!-- Honeypot anti-bot (Ucapan) -->
+              <input
+                type="text"
+                id="hp_trap_wish"
+                name="hp_trap_wish"
+                tabindex="-1"
+                autocomplete="new-password"
+                aria-hidden="true"
+                style="position:absolute; left:-9999px; width:1px; height:1px; padding:0; border:0;"
+              />
+
+              <button class="btn btn--ghost w100" type="submit">Kirim Ucapan</button>
+              <p class="tiny muted">Ucapan tersimpan ke Google Spreadsheet (jika endpoint sudah diisi di config).</p>
+            </form>
+          </div>
+
+          <!-- RIGHT -->
+          <div class="glass reveal rsvpRight">
+            <div class="rsvpRight__top">
+              <h4 class="cardTitle" style="margin:0">Ucapan Tamu</h4>
+              <button id="btnRefreshWishes" class="btn btn--ghost btn--sm" type="button">Refresh</button>
+            </div>
+            <p class="tiny muted" style="margin-top:10px">Daftar ucapan akan muncul di bawah ini.</p>
+            <div id="wishList" class="wishList wishList--scroll"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9) PENUTUP -->
+    <section id="closing" class="section closingSection" aria-labelledby="closingTitle">
+      <div class="sectionBg sectionBg--closing" id="closingBg" aria-hidden="true"></div>
+      <div class="container">
+        <div class="closingText reveal">
+          <h3 class="title" id="closingTitle">Terima Kasih</h3>
+          <p class="muted" id="closingDesc">
+            Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.
+          </p>
+
+          <p class="muted small">KAMI YANG BERBAHAGIA</p>
+          <div class="closingNames">
+            <span id="closingBride">Nisa</span>
+            <span class="amp">&amp;</span>
+            <span id="closingGroom">Khoiril</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer" aria-label="Footer">
+    <div class="container footerInner">
+      <p class="tiny muted">© <span id="yearNow"></span> <b id="footerBrand">Brand</b> — All rights reserved.</p>
+      <p class="tiny muted">Undangan Digital — Khoiril &amp; Nisa</p>
+    </div>
+  </footer>
+
+  <!-- JS (defer + versi untuk cache-busting) -->
+  <script src="./js/script.js?v=20260228" defer></script>
+</body>
+</html>
