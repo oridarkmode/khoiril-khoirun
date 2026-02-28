@@ -1,0 +1,156 @@
+{
+  "brand": "Oridarkmode Studio",
+  "siteTitle": "Undangan Pernikahan",
+  "theme": {
+    "accent": "#C7B8FF",
+    "accent2": "#7CF7D4",
+    "bg": "#07060C"
+  },
+  "guest": {
+    "paramName": "to",
+    "defaultName": "Tamu Undangan"
+  },
+  "backgrounds": {
+    "cover": "assets/img/bg-cover.jpg",
+    "home": "assets/img/bg-home.jpg",
+    "closing": "assets/img/bg-closing.jpg"
+  },
+  "cover": {
+    "titleTop": "The Wedding Of",
+    "title": "K & K",
+    "dateText": "Selasa, 24 Maret 2026",
+    "greeting": ""
+  },
+  "home": {
+    "headline": "Kami mengundang Bapak/Ibu/Saudara/i untuk hadir di hari bahagia kami.",
+    "locationText": "Jepara, Jawa Tengah",
+    "eventISO": "2026-03-24T09:00:00+07:00",
+    "timezone": "WIB"
+  },
+  "couple": {
+    "bride": {
+      "name": "Khoirun Nisa, S.Sos.",
+      "parents": "Putri dari Bapak Junaidi & Ibu Siti Zulaikho",
+      "photo": "assets/img/couple-bride.jpg",
+      "instagram": "https://www.instagram.com/enchalightmode?igsh=bHFjbmNjcXZ5M3Fv"
+    },
+    "groom": {
+      "name": "Khoiril Murbaist, S.Sos.",
+      "parents": "Putra dari Bapak Edy Suyanto & Ibu Lusyati",
+      "photo": "assets/img/couple-groom.jpg",
+      "instagram": "https://www.instagram.com/oridarkmode?igsh=MTM1aGpta2p0YWs2NA=="
+    }
+  },
+  "events": [
+    {
+      "type": "Akad & Resepsi",
+      "dateText": "Selasa, 24 Maret 2026",
+      "items": [
+        {
+          "label": "Akad",
+          "timeText": "12.00 - 13.00 WIB",
+          "place": "Masjid Baitul Makmur",
+          "address": "Jl.Dukuh Sekelor 09/05, Bumiharjo, Keling - Jepara"
+        },
+        {
+          "label": "Resepsi",
+          "timeText": "13.00 - 18.00 WIB",
+          "place": "Rumah Mempelai Wanita",
+          "address": "Jl.Dukuh Sekelor 09/05, Bumiharjo, Keling - Jepara"
+        }
+      ],
+      "mapEmbed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d415.93984634891984!2d110.83489864738965!3d-6.4280604361309095!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e713b1464548e09%3A0x94007fd4c7a808b!2sBumiharjo%2C%20Kec.%20Keling%2C%20Kabupaten%20Jepara%2C%20Jawa%20Tengah!5e0!3m2!1sid!2sid!4v1770573043511!5m2!1sid!2sid",
+      "mapDirection": "https://maps.app.goo.gl/mWVkuW3rtSCsHeSL8"
+    },
+    {
+      "type": "Ngunduh Mantu",
+      "dateText": "Jum'at, 27 Maret 2026",
+      "items": [
+        {
+          "label": "Ngunduh Mantu",
+          "timeText": "09.00 - 13.00 WIB",
+          "place": "Rumah Mempelai Pria",
+          "address": "Bulakwaru Barat 01/03, Tarub - Tegal"
+        }
+      ],
+      "mapEmbed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d329.1636749185386!2d109.19234068239028!3d-6.92302569752679!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6fc76115309dbb%3A0xc37ecf244fabe60b!2s35GR%2BRWH%2C%20Tangkil%2C%20Bulakwaru%2C%20Kec.%20Tarub%2C%20Kabupaten%20Tegal%2C%20Jawa%20Tengah%2052184!5e0!3m2!1sid!2sid!4v1770573299316!5m2!1sid!2sid",
+      "mapDirection": "https://maps.app.goo.gl/mMfqaDjNkEtTJgn68"
+    }
+  ],
+  "gallery": {
+    "photos": [
+      "assets/img/gallery-1.jpg",
+      "assets/img/gallery-2.jpg",
+      "assets/img/gallery-3.jpg",
+      "assets/img/gallery-4.jpg",
+      "assets/img/gallery-5.jpg",
+      "assets/img/gallery-6.jpg",
+      "assets/img/gallery-7.JPG",
+      "assets/img/gallery-8.jpg"
+    ],
+    "videos": [
+      {
+        "title": "Prewedding Film",
+        "src": "assets/video/prewedding.mp4",
+        "poster": "assets/img/thumbnail.jpg"
+      }
+    ]
+  },
+  "story": [
+    { "year": "2019", "title": "Pertama Bertemu", "desc": "Alam semesta yang seluas ini kami tidak pernah menyangka akan dipertemukan, namun sebuah garis takdir tidak ada yang kebetulan, kami bertemu pertama kali dalam ruangan kelas sederhana yang pada saat itu kami baru saja menyandang status mahasiswa, kami adalah teman satu kelas." },
+    { "year": "2021", "title": "Dekat", "desc": "Tidak terasa, ternyata rasa tulus kasih tanpa pamrih tumbuh dihati kami, kami saling mencintai lalu kami memutuskan untuk saling dalam hal apapun itu, saling mengasihi, saling menghargai, saling menjaga komitmen dan saling2 lainnya." },
+    { "year": "2025", "title": "Lamaran", "desc": "Kami memutuskan untuk melangkah, meminta restu dan meminta ridho, dua keluarga berkumpul silaturahmi dan saling bertukar cerita, makan bersama dan kami sangat amat bahagia." },
+    { "year": "2026", "title": "Hari Bahagia", "desc": "Ternyata setelah acara pertemuan kedua keluarga satu tahun lalu, kami benar2 sampai pada harap yang selalu dilangitkan itu, kami akan berjanji dihadapan Tuhan dan beribu malaikat untuk melaksanakan ibadah terpanjang dalam hidup." }
+  ],
+  "gifts": {
+    "enabled": true,
+    "options": [
+      {
+        "label": "Transfer Bank",
+        "note": "BCA",
+        "name": "Khoiril Murbaist",
+        "value": "0991122175",
+        "logo": "assets/img/banks/bank-placeholder.svg"
+      },
+      {
+        "label": "E-Wallet",
+        "note": "ShopeePay",
+        "name": "Khoirun Nisa",
+        "value": "088980366617",
+        "logo": "assets/img/banks/wallet-placeholder.svg"
+      },
+      {
+        "label": "Alamat Kado",
+        "note": "Gift",
+        "name": "Alamat Rumah",
+        "value": "Jl.Dukuh Sekelor 09/05, Bumiharjo, Keling, Jepara - 59454",
+        "logo": "assets/img/banks/gift-placeholder.svg"
+      }
+    ]
+  },
+  "music": {
+    "src": "assets/audio/song.mp3",
+    "startMuted": true
+  },
+  "rsvp": {
+    "enabled": true,
+    "maxPax": 5
+  },
+  "sheet": {
+    "enabled": true,
+    "secret": "TOKEN-ULTRA-PRIVATE-X93JS7K",
+    "postEndpoint": "https://script.google.com/macros/s/AKfycbz89KY1AluoYEzRnxsCFteg7pb9PYK5t4pl4WPx7XiMYcTQvUB_VbeeCEgHcQDP-gsuqw/exec",
+    "readEndpoint": "https://script.google.com/macros/s/AKfycbz89KY1AluoYEzRnxsCFteg7pb9PYK5t4pl4WPx7XiMYcTQvUB_VbeeCEgHcQDP-gsuqw/exec"
+  },
+  "closing": {
+    "title": "Terima Kasih",
+    "desc": "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu."
+  }
+}
+
+
+
+
+
+
+
