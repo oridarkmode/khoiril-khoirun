@@ -1,5 +1,9 @@
 # Undangan Digital – Glassmorphism Elegant (Final)
 
+## License
+Oridarkmode Custom Branding License (OCBL-1.0).  
+Lihat file ./LICENSE untuk detail.
+
 ## Fitur
 - Cover gate + custom nama tamu dari URL `?to=Nama+Tamu`
 - Background berbeda: cover/home/closing  
