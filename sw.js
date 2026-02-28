@@ -1,15 +1,18 @@
 // sw.js
-const CACHE = "glass-invite-final-v11"; // naikkan angkanya
+const CACHE = "glass-invite-final-v12"; // bump versi setiap rilis
 const PRECACHE = [
   "./",
   "./index.html",
-  "./css/style.css",      // akan tetap di-refresh via network-first di fetch handler
-  "./js/script.js",       // idem
+  "./css/style.css",
+  "./js/script.js",
   "./manifest.webmanifest",
   "./assets/icons/icon-192.png",
   "./assets/icons/icon-512.png"
-  // ⚠️ SENGAJA: TIDAK mem-precache "./data/config.json" agar selalu fresh
+  // Tidak mem-precache ./data/config.json agar selalu fresh
 ];
+
+// Hardening: blok pesan injeksi (placeholder; jika perlu, isi whitelist di sini)
+self.addEventListener("message", (e) => { /* no-op */ });
 
 // Helper simpan ke cache (best effort)
 async function putToCache(request, response){
@@ -31,28 +34,33 @@ self.addEventListener("activate", (e) => {
   e.waitUntil(
     caches.keys().then(keys =>
       Promise.all(keys.map(k => (k !== CACHE ? caches.delete(k) : null)))
-    ).then(() => self.clients.claim())
+    ).then(async () => {
+      await self.clients.claim();
+      // Force refresh semua tab agar ambil asset terbaru
+      const clients = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+      clients.forEach(client => client.navigate(client.url));
+    })
   );
 });
 
 // Strategi:
-// - document/script/style/json → NETWORK-FIRST (agar update langsung terlihat)
-// - image/font/audio/video    → CACHE-FIRST (hemat bandwidth)
-// - Hormati request.cache === "no-store" → selalu network (untuk config.json)
+// - document/script/style/json → NETWORK-FIRST
+// - image/font/audio/video     → CACHE-FIRST
+// - Hormati request.cache === "no-store" (untuk config.json)
 self.addEventListener("fetch", (e) => {
   const req = e.request;
 
-  // Bypass SW untuk domain lain
+  // Hanya tangani origin yang sama
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
 
-  // Hormati 'no-store' (mis. config.json yang di-fetch no-store)
+  // Hormati 'no-store'
   if (req.cache === "no-store") {
     e.respondWith(fetch(req).catch(() => caches.match(req)));
     return;
   }
 
-  const dest = req.destination; // '', 'document', 'script', 'style', 'image', 'audio', 'video', 'font', 'json'
+  const dest = req.destination;
 
   // NETWORK-FIRST untuk app shell & data
   if (dest === "document" || dest === "script" || dest === "style" || dest === "json" || req.headers.get("accept")?.includes("text/html")) {
@@ -65,7 +73,7 @@ self.addEventListener("fetch", (e) => {
     return;
   }
 
-  // CACHE-FIRST untuk aset berat (img/font/audio/video)
+  // CACHE-FIRST untuk aset berat
   if (["image", "font", "audio", "video"].includes(dest)) {
     e.respondWith(
       caches.match(req).then(cached => {
@@ -79,7 +87,7 @@ self.addEventListener("fetch", (e) => {
     return;
   }
 
-  // Default fallback → try network, else cache
+  // Default
   e.respondWith(
     fetch(req).then(res => {
       putToCache(req, res.clone());
@@ -87,5 +95,3 @@ self.addEventListener("fetch", (e) => {
     }).catch(() => caches.match(req))
   );
 });
-
-
