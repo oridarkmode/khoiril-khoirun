@@ -16,7 +16,24 @@ const state = { cfg: null, muted: true };
 function safeText(s){ return (s ?? "").toString().replace(/[<>]/g,"").trim(); }
 function qp(name){ return new URL(location.href).searchParams.get(name) || ""; }
 function decodePlus(v){ return decodeURIComponent((v || "").replace(/\+/g, " ")); }
+// INI UNTUK 2 UNDANGAN ---
+function overrideDateIfNeeded() {
+  const param = qp("v"); // contoh: ?v=23 atau ?v=24
+  if (!param) return;
 
+  if (param === "23") {
+    // Set ke tanggal 23 Maret
+    state.cfg.cover.dateText = "Minggu, 23 Maret 2026";
+    state.cfg.home.eventISO = "2026-03-23T09:00:00+07:00";
+  }
+
+  if (param === "24") {
+    // Default atau 24 Maret
+    state.cfg.cover.dateText = "Selasa, 24 Maret 2026";
+    state.cfg.home.eventISO = "2026-03-24T09:00:00+07:00";
+  }
+}
+// --- AKHIR PATCH 2 UNDANGAN ---
 async function loadConfig(){
   const res = await fetch("./data/config.json", { cache: "no-store" });
   if(!res.ok) throw new Error("config.json tidak ditemukan");
@@ -661,11 +678,29 @@ function registerSW(){
 /* -------- Init -------- */
 (async function init(){
   try{
-    state.cfg = await loadConfig();
-    setTheme(); setBrand(); fillCover(); applySectionBackgrounds();
-    setGuest(); setHome(); setCouple(); buildEvents();
-    gallery(); renderStory(); gifts(); wireRSVP(); closing();
-    countdown(); wireAudio(); wireUI(); reveal(); registerSW();
+    state.cfg = await loadConfig(); // 1. Load data
+    
+    overrideDateIfNeeded(); // 2. Jalankan Patch di sini (Sebelum data disebar ke UI)
+
+    setTheme(); 
+    setBrand(); 
+    fillCover(); 
+    applySectionBackgrounds();
+    setGuest(); 
+    setHome(); // 3. setHome sekarang akan menggunakan data yang sudah di-patch
+    
+    setCouple(); 
+    buildEvents();
+    gallery(); 
+    renderStory(); 
+    gifts(); 
+    wireRSVP(); 
+    closing();
+    countdown(); 
+    wireAudio(); 
+    wireUI(); 
+    reveal(); 
+    registerSW();
   }catch(err){
     console.error(err);
     alert("Gagal memuat undangan. Pastikan struktur folder & path file benar.");
