@@ -1,15 +1,38 @@
-MIT License
+Oridarkmode Custom Branding License (OCBL-1.0)
 
-Copyright (c) 2026
+Copyright (c) 2026 Oridarkmode Studio
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+1) Hak yang diberikan
+- Menggunakan hasil build (situs statis) untuk kepentingan pribadi/klien dan membagikan URL undangan.
+- Memodifikasi konten (teks, gambar, warna) untuk kebutuhan acara, dengan atribusi brand tetap tampil.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+2) Batasan
+- Dilarang menjual kembali/menyewakan/mendistribusikan template/kode sumber, sebagian atau seluruhnya.
+- Dilarang mensublicense atau mengizinkan pihak lain mendistribusikan salinan.
+- Dilarang menghapus/menyamarkan pemberitahuan hak cipta dan lisensi.
+- Dilarang menggunakan brand/nama dagang/logo “Oridarkmode Studio” untuk menyatakan dukungan/afiliasi tanpa izin tertulis.
+- Dilarang menggunakan aset brand di luar undangan tanpa izin tertulis.
+- Dilarang menggunakan kode/aset untuk tujuan ilegal atau melanggar hak pihak ketiga.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND...
+3) Atribusi Brand
+Selama situs undangan dipublikasikan, tampilkan atribusi terlihat pada footer:
+© 2026 — Oridarkmode Studio
+Atribusi boleh disederhanakan (mis. “Didesain oleh Oridarkmode Studio”), asalkan nama brand tidak dihapus.
+
+4) Kode Sumber vs Hasil Build
+Kode sumber (HTML, CSS, JS, aset) dilindungi lisensi ini dan tidak boleh didistribusikan ulang.
+Hasil build (situs statis ter-deploy/URL) boleh dipakai untuk satu/lebih acara yang sah, mengikuti Bagian 3.
+
+5) Larangan Penambangan Data/Model
+Dilarang menggunakan kode, desain, teks, atau aset untuk melatih model AI atau penambangan data skala besar tanpa izin tertulis.
+
+6) Jaminan & Tanggung Jawab
+Perangkat lunak disediakan "apa adanya" tanpa jaminan apa pun. Pemilik lisensi tidak bertanggung jawab atas klaim/kerusakan dari penggunaan proyek ini.
+
+7) Pengakhiran
+Hak berdasarkan lisensi ini berakhir otomatis jika terjadi pelanggaran. Setelah pengakhiran, pengguna wajib menghentikan penggunaan kode sumber dan menghapus turunan yang melanggar.
+
+8) Ketentuan Lain
+Pemilik lisensi dapat memperbarui teks lisensi untuk rilis berikutnya. Versi yang berlaku adalah yang tercantum di repositori saat distribusi.
+
+Ringkasan non-mengikat: Boleh dipakai untuk undangan (pribadi/klien) dengan atribusi brand, dilarang jual ulang template/kode, dilarang pakai brand tanpa izin.
