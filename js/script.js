@@ -29,7 +29,7 @@ function overrideDateIfNeeded() {
     "23": {
       coverDateText: "Senin, 23 Maret 2026",
       eventISO: "2026-03-23T09:00:00+07:00",
-      eventsDateText: "Minggu, 23 Maret 2026"
+      eventsDateText: "Senin, 23 Maret 2026"
     },
     "24": {
       coverDateText: "Selasa, 24 Maret 2026",
@@ -726,5 +726,6 @@ function registerSW(){
     alert("Gagal memuat undangan. Pastikan struktur folder & path file benar.");
   }
 })();
+
 
 
