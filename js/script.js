@@ -4,6 +4,9 @@
    Glassmorphism Invitation - FINAL (Stabil + Featured Video)
 ========================================================= */
 
+let LAST_POST_AT = 0;
+const MIN_GAP_MS = 4000; // 4 detik
+
 const $ = (s, p=document) => p.querySelector(s);
 const $$ = (s, p=document) => [...p.querySelectorAll(s)];
 
@@ -93,10 +96,12 @@ function setCouple(){
   $("#brideParents").textContent = bride.parents || "";
   if (bride.photo) $("#bridePhoto").src = bride.photo;
   $("#brideIg").href = bride.instagram || "#";
+  $("#brideIg").setAttribute("rel","noopener noreferrer");
   $("#groomName").textContent = groom.name || "Mempelai Pria";
   $("#groomParents").textContent = groom.parents || "";
   if (groom.photo) $("#groomPhoto").src = groom.photo;
   $("#groomIg").href = groom.instagram || "#";
+  $("#groomIg").setAttribute("rel","noopener noreferrer");
 }
 
 /* -------- Events (buat DOM aman) -------- */
@@ -519,6 +524,7 @@ async function postToSheet(payload){
   if(!url) return { ok:false, msg:"missing-endpoint" };
   try{
     await fetch(url, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...payload, secret: state.cfg.sheet.secret }) });
+    LAST_POST_AT = Date.now();
     return { ok:true };
   }catch(err){
     return { ok:false, msg: err.message || "failed" };
@@ -565,6 +571,7 @@ function wireRSVP(){
 
   $("#rsvpForm").addEventListener("submit", async (e)=>{
     e.preventDefault();
+    if (Date.now() - LAST_POST_AT < MIN_GAP_MS) { return; }
     const name = safeText($("#rsvpName").value);
     const attend = $("#rsvpAttend").value;
     const pax = Math.max(1, Math.min(Number($("#rsvpPax").value || 1), Number(state.cfg.rsvp.maxPax || 5)));
@@ -579,6 +586,7 @@ function wireRSVP(){
 
   $("#wishForm").addEventListener("submit", async (e)=>{
     e.preventDefault();
+    if (Date.now() - LAST_POST_AT < MIN_GAP_MS) { return; }
 
     // Honeypot: jika terisi, anggap bot → jangan kirim
     const hp = $("#hp_trap_wish")?.value?.trim();
@@ -663,8 +671,3 @@ function registerSW(){
     alert("Gagal memuat undangan. Pastikan struktur folder & path file benar.");
   }
 })();
-
-
-
-
-
