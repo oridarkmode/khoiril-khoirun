@@ -17,20 +17,39 @@ function safeText(s){ return (s ?? "").toString().replace(/[<>]/g,"").trim(); }
 function qp(name){ return new URL(location.href).searchParams.get(name) || ""; }
 function decodePlus(v){ return decodeURIComponent((v || "").replace(/\+/g, " ")); }
 // INI UNTUK 2 UNDANGAN ---
+// ====== PATCH: Override tanggal undangan via parameter v ======
+// ?v=23 → Minggu, 23 Maret 2026
+// ?v=24 → Selasa, 24 Maret 2026 (default)
 function overrideDateIfNeeded() {
-  const param = qp("v"); // contoh: ?v=23 atau ?v=24
-  if (!param) return;
+  const v = qp("v"); // contoh: ?v=23 atau ?v=24
+  if (!v) return; // tanpa v → pakai tanggal default dari config.json
 
-  if (param === "23") {
-    // Set ke tanggal 23 Maret
-    state.cfg.cover.dateText = "Minggu, 23 Maret 2026";
-    state.cfg.home.eventISO = "2026-03-23T09:00:00+07:00";
-  }
+  // Preset tanggal + ISO untuk countdown/ICS
+  const presets = {
+    "23": {
+      coverDateText: "Minggu, 23 Maret 2026",
+      eventISO: "2026-03-23T09:00:00+07:00",
+      eventsDateText: "Minggu, 23 Maret 2026"
+    },
+    "24": {
+      coverDateText: "Selasa, 24 Maret 2026",
+      eventISO: "2026-03-24T09:00:00+07:00",
+      eventsDateText: "Selasa, 24 Maret 2026"
+    }
+  };
 
-  if (param === "24") {
-    // Default atau 24 Maret
-    state.cfg.cover.dateText = "Selasa, 24 Maret 2026";
-    state.cfg.home.eventISO = "2026-03-24T09:00:00+07:00";
+  // Pilih preset; jika v bukan "23"/"24", fallback ke "24"
+  const p = presets[v] || presets["24"];
+
+  // Mutasi konfigurasi runtime agar UI membaca nilai terbaru
+  if (!state.cfg.cover) state.cfg.cover = {};
+  if (!state.cfg.home) state.cfg.home = {};
+  state.cfg.cover.dateText = p.coverDateText;
+  state.cfg.home.eventISO = p.eventISO;
+
+  // (Opsional) selaraskan tanggal pada event utama (Acara)
+  if (Array.isArray(state.cfg.events) && state.cfg.events.length > 0) {
+    state.cfg.events[0].dateText = p.eventsDateText;
   }
 }
 // --- AKHIR PATCH 2 UNDANGAN ---
@@ -678,19 +697,20 @@ function registerSW(){
 /* -------- Init -------- */
 (async function init(){
   try{
-    state.cfg = await loadConfig(); // 1. Load data
-    
-    overrideDateIfNeeded(); // 2. Jalankan Patch di sini (Sebelum data disebar ke UI)
+    state.cfg = await loadConfig();
+
+    // === Tambahkan baris ini: override tanggal sesuai ?v=... ===
+    overrideDateIfNeeded();
 
     setTheme(); 
     setBrand(); 
     fillCover(); 
     applySectionBackgrounds();
+
     setGuest(); 
-    setHome(); // 3. setHome sekarang akan menggunakan data yang sudah di-patch
-    
+    setHome();           // ← setHome() sudah membaca tanggal hasil override
     setCouple(); 
-    buildEvents();
+    buildEvents();       // ← events[0].dateText ikut tersinkron
     gallery(); 
     renderStory(); 
     gifts(); 
@@ -706,3 +726,4 @@ function registerSW(){
     alert("Gagal memuat undangan. Pastikan struktur folder & path file benar.");
   }
 })();
+
