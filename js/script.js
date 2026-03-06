@@ -18,7 +18,7 @@ function qp(name){ return new URL(location.href).searchParams.get(name) || ""; }
 function decodePlus(v){ return decodeURIComponent((v || "").replace(/\+/g, " ")); }
 // INI UNTUK 2 UNDANGAN ---
 // ====== PATCH: Override tanggal undangan via parameter v ======
-// ?v=23 → Minggu, 23 Maret 2026
+// ?v=23 → Senin, 23 Maret 2026
 // ?v=24 → Selasa, 24 Maret 2026 (default)
 function overrideDateIfNeeded() {
   const v = qp("v"); // contoh: ?v=23 atau ?v=24
@@ -27,7 +27,7 @@ function overrideDateIfNeeded() {
   // Preset tanggal + ISO untuk countdown/ICS
   const presets = {
     "23": {
-      coverDateText: "Minggu, 23 Maret 2026",
+      coverDateText: "Senin, 23 Maret 2026",
       eventISO: "2026-03-23T09:00:00+07:00",
       eventsDateText: "Minggu, 23 Maret 2026"
     },
@@ -726,4 +726,5 @@ function registerSW(){
     alert("Gagal memuat undangan. Pastikan struktur folder & path file benar.");
   }
 })();
+
 
