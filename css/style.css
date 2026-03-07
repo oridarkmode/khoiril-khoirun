@@ -392,6 +392,19 @@ a{ color:inherit; text-decoration:none; }
   background: rgba(255,255,255,.04);
   border: 1px solid rgba(255,255,255,.10);
 }
+/* Heading tanggal per sub-acara (di luar kartu) */
+.eventDateSep{
+  margin: 10px 0 6px;
+  text-align: center;
+  font-weight: 900;
+  color: rgba(255,255,255,.85);
+  letter-spacing: .02em;
+}
+
+/* Di layar kecil, beri jarak sedikit lebih besar supaya tidak menumpuk */
+@media (max-width: 560px){
+  .eventDateSep{ margin: 12px 0 8px; }
+}
 
 /* Gallery */
 .galleryGrid{
@@ -800,5 +813,6 @@ input:focus, select:focus, textarea:focus{
   font-size: 28px;
   color: white;
 }
+
 
 
