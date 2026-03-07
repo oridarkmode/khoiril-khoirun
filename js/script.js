@@ -16,7 +16,6 @@ const state = { cfg: null, muted: true };
 function safeText(s){ return (s ?? "").toString().replace(/[<>]/g,"").trim(); }
 function qp(name){ return new URL(location.href).searchParams.get(name) || ""; }
 function decodePlus(v){ return decodeURIComponent((v || "").replace(/\+/g, " ")); }
-// INI UNTUK 2 UNDANGAN ---
 // ====== PATCH: Override tanggal undangan via parameter v ======
 // ?v=23 → Senin, 23 Maret 2026
 // ?v=24 → Selasa, 24 Maret 2026 (default)
@@ -24,7 +23,6 @@ function overrideDateIfNeeded() {
   const v = qp("v"); // contoh: ?v=23 atau ?v=24
   if (!v) return; // tanpa v → pakai tanggal default dari config.json
 
-  // Preset tanggal + ISO untuk countdown/ICS
   const presets = {
     "23": {
       coverDateText: "Senin, 23 Maret 2026",
@@ -38,7 +36,6 @@ function overrideDateIfNeeded() {
     }
   };
 
-  // Pilih preset; jika v bukan "23"/"24", fallback ke "24"
   const p = presets[v] || presets["24"];
 
   // Mutasi konfigurasi runtime agar UI membaca nilai terbaru
@@ -47,9 +44,23 @@ function overrideDateIfNeeded() {
   state.cfg.cover.dateText = p.coverDateText;
   state.cfg.home.eventISO = p.eventISO;
 
-  // (Opsional) selaraskan tanggal pada event utama (Acara)
+  // Selaraskan tanggal pada event utama (judul tanggal di kartu events)
   if (Array.isArray(state.cfg.events) && state.cfg.events.length > 0) {
     state.cfg.events[0].dateText = p.eventsDateText;
+
+    // — Tambahan: beri tanggal khusus di item "Resepsi" saat v=23 —
+    // agar di atas blok Resepsi muncul tanggal lagi seperti di Akad
+    if (v === "23" && Array.isArray(state.cfg.events[0].items)) {
+      state.cfg.events[0].items = state.cfg.events[0].items.map(it=>{
+        if (String(it.label || "").toLowerCase().includes("resepsi")) {
+          return { ...it, dateText: p.eventsDateText };
+        }
+        return it;
+      });
+    }
+
+    // (Opsional) kalau v=24 dan kamu juga ingin "Resepsi" bertanggal sendiri:
+    // else if (v === "24") { ... mirip di atas ... }
   }
 }
 // --- AKHIR PATCH 2 UNDANGAN ---
@@ -171,7 +182,16 @@ function buildEvents(){
     (ev.items || []).forEach(it=>{
       const block = document.createElement("div");
       block.className = "eventBlock";
+   
+      // Jika item punya it.dateText, tampilkan di atas badge
+      const dateRow = it.dateText
+        ? `<div class="muted small" style="font-weight:800;letter-spacing:.02em;margin-bottom:6px">
+             ${safeText(it.dateText)}
+           </div>`
+        : "";
+   
       block.innerHTML = `
+        ${dateRow}
         <div class="badge" style="display:inline-block">${safeText(it.label)}</div>
         <div class="eventMeta" style="margin-top:8px">
           <div><b>${safeText(it.timeText)}</b></div>
@@ -181,7 +201,6 @@ function buildEvents(){
       `;
       card.appendChild(block);
     });
-
     if (ev.mapEmbed) {
       const iframe = document.createElement("iframe");
       iframe.className = "mapFrame";
@@ -726,6 +745,7 @@ function registerSW(){
     alert("Gagal memuat undangan. Pastikan struktur folder & path file benar.");
   }
 })();
+
 
 
 
