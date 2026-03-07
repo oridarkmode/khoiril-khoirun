@@ -16,51 +16,70 @@ const state = { cfg: null, muted: true };
 function safeText(s){ return (s ?? "").toString().replace(/[<>]/g,"").trim(); }
 function qp(name){ return new URL(location.href).searchParams.get(name) || ""; }
 function decodePlus(v){ return decodeURIComponent((v || "").replace(/\+/g, " ")); }
-// ====== PATCH: Override tanggal undangan via parameter v ======
-// ?v=23 → Senin, 23 Maret 2026
-// ?v=24 → Selasa, 24 Maret 2026 (default)
+// ====== PATCH: Override tanggal + urutan + separator tanggal via parameter v ======
+// ?v=23 → Senin, 23 Maret 2026, urutan: [Resepsi] lalu [Akad], dengan 2 separator tanggal di luar kartu
+// ?v=24 → Selasa, 24 Maret 2026 (default), urutan tetap dari config
 function overrideDateIfNeeded() {
   const v = qp("v"); // contoh: ?v=23 atau ?v=24
   if (!v) return; // tanpa v → pakai tanggal default dari config.json
 
   const presets = {
     "23": {
-      coverDateText: "Senin, 23 Maret 2026",
-      eventISO: "2026-03-23T09:00:00+07:00",
-      eventsDateText: "Senin, 23 Maret 2026"
+      dateText: "Senin, 23 Maret 2026",
+      eventISO: "2026-03-23T09:00:00+07:00"
     },
     "24": {
-      coverDateText: "Selasa, 24 Maret 2026",
-      eventISO: "2026-03-24T09:00:00+07:00",
-      eventsDateText: "Selasa, 24 Maret 2026"
+      dateText: "Selasa, 24 Maret 2026",
+      eventISO: "2026-03-24T09:00:00+07:00"
     }
   };
 
+  // fallback ke 24 jika nilainya bukan 23/24
   const p = presets[v] || presets["24"];
 
   // Mutasi konfigurasi runtime agar UI membaca nilai terbaru
   if (!state.cfg.cover) state.cfg.cover = {};
   if (!state.cfg.home) state.cfg.home = {};
-  state.cfg.cover.dateText = p.coverDateText;
+  state.cfg.cover.dateText = p.dateText;
   state.cfg.home.eventISO = p.eventISO;
 
-  // Selaraskan tanggal pada event utama (judul tanggal di kartu events)
+  // (Opsional) sinkronkan dateText pada kartu event teratas
   if (Array.isArray(state.cfg.events) && state.cfg.events.length > 0) {
-    state.cfg.events[0].dateText = p.eventsDateText;
-
-    // — Tambahan: beri tanggal khusus di item "Resepsi" saat v=23 —
-    // agar di atas blok Resepsi muncul tanggal lagi seperti di Akad
-    if (v === "23" && Array.isArray(state.cfg.events[0].items)) {
-      state.cfg.events[0].items = state.cfg.events[0].items.map(it=>{
-        if (String(it.label || "").toLowerCase().includes("resepsi")) {
-          return { ...it, dateText: p.eventsDateText };
-        }
-        return it;
-      });
+    // Untuk v=24: cukup set dateText di kartu
+    if (v === "24") {
+      state.cfg.events[0].dateText = presets["24"].dateText;
+      return;
     }
 
-    // (Opsional) kalau v=24 dan kamu juga ingin "Resepsi" bertanggal sendiri:
-    // else if (v === "24") { ... mirip di atas ... }
+    // Untuk v=23: butuh struktur khusus:
+    // - judul tanggal di kartu event (atas) boleh tetap "Resepsi & Akad" (dari config)
+    // - sisipkan heading tanggal di LUAR kartu item: satu untuk Resepsi (23), satu untuk Akad (24)
+    // - urutan item jadi Resepsi dulu baru Akad
+    const ev0 = state.cfg.events[0];
+    if (!ev0) return;
+
+    // Salin item dari config
+    const items = Array.isArray(ev0.items) ? [...ev0.items] : [];
+
+    // Deteksi item Resepsi & Akad
+    const isResepsi = (it) => String(it.label || "").toLowerCase().includes("resepsi");
+    const isAkad    = (it) => String(it.label || "").toLowerCase().includes("akad");
+
+    const resepsi = items.find(isResepsi);
+    const akad    = items.find(isAkad);
+
+    // Jika keduanya ada, bentuk ulang urutan + sisipkan separator "heading tanggal"
+    if (resepsi && akad) {
+      // Separator khusus untuk ditangani renderer: _type: "dateSep"
+      const sep23 = { _type: "dateSep", text: presets["23"].dateText };
+      const sep24 = { _type: "dateSep", text: presets["24"].dateText };
+
+      // Resepsi (23) dahulu, lalu Akad (24)
+      ev0.items = [ sep23, resepsi, sep24, akad ];
+    } else {
+      // Jika struktur tidak lengkap, fallback: tetap tampilkan dateText kartu
+      ev0.dateText = presets["23"].dateText;
+    }
   }
 }
 // --- AKHIR PATCH 2 UNDANGAN ---
@@ -180,18 +199,19 @@ function buildEvents(){
     card.appendChild(meta);
 
     (ev.items || []).forEach(it=>{
+      // Jika ini adalah separator tanggal (heading di luar kartu)
+      if (it && it._type === "dateSep") {
+        const sep = document.createElement("div");
+        sep.className = "eventDateSep";
+        sep.textContent = safeText(it.text || "");
+        card.appendChild(sep);
+        return;
+      }
+   
+      // Jika item event biasa (Akad/Resepsi)
       const block = document.createElement("div");
       block.className = "eventBlock";
-   
-      // Jika item punya it.dateText, tampilkan di atas badge
-      const dateRow = it.dateText
-        ? `<div class="muted small" style="font-weight:800;letter-spacing:.02em;margin-bottom:6px">
-             ${safeText(it.dateText)}
-           </div>`
-        : "";
-   
       block.innerHTML = `
-        ${dateRow}
         <div class="badge" style="display:inline-block">${safeText(it.label)}</div>
         <div class="eventMeta" style="margin-top:8px">
           <div><b>${safeText(it.timeText)}</b></div>
@@ -745,6 +765,7 @@ function registerSW(){
     alert("Gagal memuat undangan. Pastikan struktur folder & path file benar.");
   }
 })();
+
 
 
 
