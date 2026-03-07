@@ -17,8 +17,8 @@ function safeText(s){ return (s ?? "").toString().replace(/[<>]/g,"").trim(); }
 function qp(name){ return new URL(location.href).searchParams.get(name) || ""; }
 function decodePlus(v){ return decodeURIComponent((v || "").replace(/\+/g, " ")); }
 // ====== PATCH: Override tanggal + urutan + separator tanggal via parameter v ======
-// ?v=23 → Senin, 23 Maret 2026, urutan: [Resepsi] lalu [Akad], dengan 2 separator tanggal di luar kartu
-// ?v=24 → Selasa, 24 Maret 2026 (default), urutan tetap dari config
+// ?v=23 → Senin, 23 Maret 2026, urutan: [Resepsi] lalu [Akad], heading tanggal di LUAR kartu
+// ?v=24 → Selasa, 24 Maret 2026 (default), urutan sesuai config + tanggal kartu tetap tampil
 function overrideDateIfNeeded() {
   const v = qp("v"); // contoh: ?v=23 atau ?v=24
   if (!v) return; // tanpa v → pakai tanggal default dari config.json
@@ -34,7 +34,6 @@ function overrideDateIfNeeded() {
     }
   };
 
-  // fallback ke 24 jika nilainya bukan 23/24
   const p = presets[v] || presets["24"];
 
   // Mutasi konfigurasi runtime agar UI membaca nilai terbaru
@@ -43,44 +42,32 @@ function overrideDateIfNeeded() {
   state.cfg.cover.dateText = p.dateText;
   state.cfg.home.eventISO = p.eventISO;
 
-  // (Opsional) sinkronkan dateText pada kartu event teratas
-  if (Array.isArray(state.cfg.events) && state.cfg.events.length > 0) {
-    // Untuk v=24: cukup set dateText di kartu
-    if (v === "24") {
-      state.cfg.events[0].dateText = presets["24"].dateText;
-      return;
-    }
+  if (!Array.isArray(state.cfg.events) || state.cfg.events.length === 0) return;
+  const ev0 = state.cfg.events[0];
 
-    // Untuk v=23: butuh struktur khusus:
-    // - judul tanggal di kartu event (atas) boleh tetap "Resepsi & Akad" (dari config)
-    // - sisipkan heading tanggal di LUAR kartu item: satu untuk Resepsi (23), satu untuk Akad (24)
-    // - urutan item jadi Resepsi dulu baru Akad
-    const ev0 = state.cfg.events[0];
-    if (!ev0) return;
-
-    // Salin item dari config
-    const items = Array.isArray(ev0.items) ? [...ev0.items] : [];
-
-    // Deteksi item Resepsi & Akad
-    const isResepsi = (it) => String(it.label || "").toLowerCase().includes("resepsi");
-    const isAkad    = (it) => String(it.label || "").toLowerCase().includes("akad");
-
-    const resepsi = items.find(isResepsi);
-    const akad    = items.find(isAkad);
-
-    // Jika keduanya ada, bentuk ulang urutan + sisipkan separator "heading tanggal"
-    if (resepsi && akad) {
-      // Separator khusus untuk ditangani renderer: _type: "dateSep"
-      const sep23 = { _type: "dateSep", text: presets["23"].dateText };
-      const sep24 = { _type: "dateSep", text: presets["24"].dateText };
-
-      // Resepsi (23) dahulu, lalu Akad (24)
-      ev0.items = [ sep23, resepsi, sep24, akad ];
-    } else {
-      // Jika struktur tidak lengkap, fallback: tetap tampilkan dateText kartu
-      ev0.dateText = presets["23"].dateText;
-    }
+  // v=24 → biarkan tanggal kartu tampil seperti biasa
+  if (v === "24") {
+    ev0.dateText = presets["24"].dateText;
+    return;
   }
+
+  // v=23 → hilangkan tanggal di DALAM kartu (supaya tidak ganda),
+  // lalu sisipkan separator tanggal di LUAR kartu untuk Resepsi & Akad.
+  ev0.dateText = ""; // ← ini menghilangkan baris “Selasa, 24 Maret 2026” di atas kartu
+
+  const items = Array.isArray(ev0.items) ? [...ev0.items] : [];
+  const isResepsi = (it) => String(it.label || "").toLowerCase().includes("resepsi");
+  const isAkad    = (it) => String(it.label || "").toLowerCase().includes("akad");
+  const resepsi = items.find(isResepsi);
+  const akad    = items.find(isAkad);
+  if (!(resepsi && akad)) return;
+
+  // Separator khusus ditangani renderer (buildEvents)
+  const sep23 = { _type: "dateSep", text: presets["23"].dateText };
+  const sep24 = { _type: "dateSep", text: presets["24"].dateText };
+
+  // Urutan: Head 23 → Resepsi → Head 24 → Akad
+  ev0.items = [ sep23, resepsi, sep24, akad ];
 }
 // --- AKHIR PATCH 2 UNDANGAN ---
 async function loadConfig(){
@@ -765,6 +752,7 @@ function registerSW(){
     alert("Gagal memuat undangan. Pastikan struktur folder & path file benar.");
   }
 })();
+
 
 
 
