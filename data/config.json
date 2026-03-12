@@ -88,13 +88,7 @@
       "assets/img/gallery-7.jpg",
       "assets/img/gallery-8.jpg"
     ],
-    "videos": [
-      {
-        "title": "Prewedding Film",
-        "src": "assets/video/prewedding.mp4",
-        "poster": "assets/img/thumbnail.jpg"
-      }
-    ]
+    "videos": []
   },
   "story": [
     { "year": "2019", "title": "Pertama Bertemu", "desc": "Alam semesta yang seluas ini kami tidak pernah menyangka akan dipertemukan, namun sebuah garis takdir tidak ada yang kebetulan, kami bertemu pertama kali dalam ruangan kelas sederhana yang pada saat itu kami baru saja menyandang status mahasiswa, kami adalah teman satu kelas." },
@@ -147,6 +141,7 @@
     "desc": "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu."
   }
 }
+
 
 
 
