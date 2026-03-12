@@ -814,5 +814,9 @@ input:focus, select:focus, textarea:focus{
   color: white;
 }
 
+#galleryVideoFeatured {
+  display: none !important;
+}
+
 
 
