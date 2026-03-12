@@ -336,20 +336,7 @@ function gallery(){
 
     console.log("[gallery] Video tile rendered with src:", v.src, "poster:", poster);
   } else {
-    console.warn("[gallery] Tidak ada item video. Pastikan data/config.json -> gallery.videos adalah array dengan minimal 1 item.");
-    // (Opsional) render placeholder agar terlihat blok ini berjalan
-    // Hapus blok ini jika tidak ingin placeholder.
-    const card = document.createElement("div");
-    card.className = "featuredCard";
-    const info = document.createElement("div");
-    info.style.cssText = "padding:32px;text-align:center;color:#fff;";
-    info.innerHTML = `
-      <div class="featuredMedia" style="display:block;background:#222;aspect-ratio:16/9;border-radius:0;"></div>
-      <div style="margin-top:12px;font-weight:700;">Video belum dikonfigurasi</div>
-      <div class="muted small" style="margin-top:4px;">Tambahkan array "gallery.videos" di data/config.json</div>
-    `;
-    card.appendChild(info);
-    featured.appendChild(card);
+    return; //skip
   }
 
   photosBottom.forEach(src => gridBottom.appendChild(makePhotoItem(src)));
@@ -752,6 +739,7 @@ function registerSW(){
     alert("Gagal memuat undangan. Pastikan struktur folder & path file benar.");
   }
 })();
+
 
 
 
