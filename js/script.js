@@ -340,6 +340,9 @@ function gallery(){
   }
 
   photosBottom.forEach(src => gridBottom.appendChild(makePhotoItem(src)));
+  // Pastikan kedua grid langsung tampil (tidak menunggu IO reveal)
+  document.querySelector('#galleryPhotosTop')?.classList.add('show');
+  document.querySelector('#galleryPhotosBottom')?.classList.add('show');
 
   // Photo modal
   const photoModal = $("#photoModal");
@@ -739,6 +742,7 @@ function registerSW(){
     alert("Gagal memuat undangan. Pastikan struktur folder & path file benar.");
   }
 })();
+
 
 
 
