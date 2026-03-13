@@ -336,7 +336,7 @@ function gallery(){
 
     console.log("[gallery] Video tile rendered with src:", v.src, "poster:", poster);
   } else {
-    return; //skip
+ 
   }
 
   photosBottom.forEach(src => gridBottom.appendChild(makePhotoItem(src)));
