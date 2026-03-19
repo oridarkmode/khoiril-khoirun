@@ -1,5 +1,5 @@
 // sw.js
-const CACHE = "glass-invite-final-v25"; // bump versi setiap rilis
+const CACHE = "glass-invite-final-v26"; // bump versi setiap rilis
 const PRECACHE = [
   "./",
   "./index.html",
